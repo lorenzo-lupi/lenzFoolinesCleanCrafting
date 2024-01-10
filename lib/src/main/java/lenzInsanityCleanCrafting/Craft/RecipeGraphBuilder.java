@@ -139,15 +139,15 @@ public class RecipeGraphBuilder<T> {
                 craftingTableMatrix.get(0).size())).accept(indexSelection);
     }
 
-    private void setGraphNodeEdgeInGivenDirection(EdgesDirectionsENUM edgeDirection, IndexSelection indexSelection) {
+    private void setGraphNodeEdgeInGivenDirection(EdgesDirectionsENUM edgeDirection, IndexSelection newNodeIndex) {
         
-        if (getCraftingTableMatrixNode(edgeDirection.applyIndexChange(indexSelection)) != null) {
+        if (getCraftingTableMatrixNode(edgeDirection.applyIndexChange(newNodeIndex)) != null) {
             
-            getCraftingTableMatrixNode(indexSelection)
-                    .edges.put(edgeDirection, getCraftingTableMatrixNode(edgeDirection.applyIndexChange(indexSelection)));
+            getCraftingTableMatrixNode(newNodeIndex)
+                    .edges.put(edgeDirection, getCraftingTableMatrixNode(edgeDirection.applyIndexChange(newNodeIndex)));
 
-            getCraftingTableMatrixNode(edgeDirection.applyIndexChange(indexSelection))
-                    .edges.put(edgeDirection.getOpposite(), getCraftingTableMatrixNode(indexSelection));
+            getCraftingTableMatrixNode(edgeDirection.applyIndexChange(newNodeIndex))
+                    .edges.put(edgeDirection.getOpposite(), getCraftingTableMatrixNode(newNodeIndex));
 
         }
     }
