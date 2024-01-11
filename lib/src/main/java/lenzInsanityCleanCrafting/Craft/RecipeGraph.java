@@ -66,6 +66,4 @@ public class RecipeGraph<T> {
         }
         return hash;
     }
-
-
 }

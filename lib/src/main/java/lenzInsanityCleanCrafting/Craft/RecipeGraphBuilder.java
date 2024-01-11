@@ -12,7 +12,7 @@ public class RecipeGraphBuilder<T> {
     private RecipeGraphNode<T> root;
     private int size;
 
-    //region EdgesDirections
+    //region positionOnTheCraftingTableConsumerMap
     private final Map<PositionOnTheCraftingTableENUM, Consumer<IndexSelection>> positionOnTheCraftingTableConsumerMap =
             Map.of(PositionOnTheCraftingTableENUM.LEFT_UP_CORNER, indexSelection -> {
                         setGraphNodeEdgeInGivenDirection(EdgesDirectionsENUM.RIGHT, indexSelection);
@@ -128,10 +128,10 @@ public class RecipeGraphBuilder<T> {
         if (indexSelection.x() >= craftingTableMatrix.size() || indexSelection.y() >= craftingTableMatrix.get(0).size())
             throw new IllegalArgumentException("Index out of bounds");
 
-        rootReplacement(indexSelection, new RecipeGraphNode<>(buildingBlock));
-        if(getCraftingTableMatrixNode(indexSelection) == null) this.size++;
-
         RecipeGraphNode<T> recipeGraphNode = new RecipeGraphNode<>(buildingBlock);
+        rootReplacement(indexSelection, recipeGraphNode);
+
+        if(getCraftingTableMatrixNode(indexSelection) == null) this.size++;
         setCraftingTableMatrixNode(indexSelection, recipeGraphNode);
 
         positionOnTheCraftingTableConsumerMap.get(PositionOnTheCraftingTableENUM.fromIndex(indexSelection,
@@ -159,7 +159,7 @@ public class RecipeGraphBuilder<T> {
         }
         else if(indexSelection.equals(this.rootIndex))
             this.root = recipeGraphNode;
-        else if (indexSelection.leftUpMore(this.rootIndex)) {
+        else if (indexSelection.greaterThan(this.rootIndex)) {
             this.rootIndex = indexSelection;
             this.root = recipeGraphNode;
         }

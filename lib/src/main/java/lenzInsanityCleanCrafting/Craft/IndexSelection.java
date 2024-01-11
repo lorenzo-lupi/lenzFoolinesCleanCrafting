@@ -1,9 +1,24 @@
 package lenzInsanityCleanCrafting.Craft;
 
-public record IndexSelection(int x, int y) {
+public record IndexSelection(int x, int y){
 
-    public boolean leftUpMore(IndexSelection that){
-        return  this.x() <= that.x() && this.y() <= that.x();
+    public IndexSelection{
+        if(x < 0 || y < 0)
+            throw new IllegalArgumentException("x and y must be positive");
+    }
+
+    public int compareTo(IndexSelection that){
+        if(this.x() < that.x() && this.y() < that.y()) return 1;
+        if(this.x() > that.x() && this.y() > that.y()) return -1;
+        return 0;
+    }
+
+    public boolean greaterThan(IndexSelection that){
+        return this.x() < that.x() && this.y() < that.y();
+    }
+
+    public boolean greaterThanOrEqual(IndexSelection that){
+        return this.x() <= that.x() && this.y() <= that.y();
     }
 
     public IndexSelection decreasedX() {
