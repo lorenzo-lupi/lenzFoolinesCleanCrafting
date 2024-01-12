@@ -19,7 +19,7 @@ import java.util.Map;
  * X X X
  * X X X
  * }S'
- * S' -> ; | ,S
+ * S' -> EOF | ,S
  * NAME -> [A-Z_][a-z_]+
  * NUMBER -> [0-9]+
  * X -> NAME | 0
@@ -45,7 +45,7 @@ public class CraftingParser<E extends Enum<E>> {
 
     public Map<RecipeGraph<E>, Recipe<E>> parse() throws IOException, ParsingException {
         readBlock();
-        while (reader.read() == ',')
+        while (reader.read() == ',' )
             readBlock();
         return this.recipes;
     }
@@ -84,22 +84,23 @@ public class CraftingParser<E extends Enum<E>> {
         return graphBuilder.build();
     }
 
-    private void readBlockMatrixLine(RecipeGraphBuilder<E> builder, int yrow) throws IOException, ParsingException {
+    private void readBlockMatrixLine(RecipeGraphBuilder<E> builder, int lineIndex) throws IOException, ParsingException {
         currentLine++;
-        String line = reader.readLine();
-        String[] blocks = line.split(" ");
+        String[] blocks = reader.readLine().split(" ");
         if (blocks.length != builder.getCraftingTableSpan())
-            throw new ParsingException("Syntax error at line " + this.currentLine + ": expected 3 blocks");
+            throw new ParsingException("Syntax error at line " + this.currentLine + ": expected "+builder.getCraftingTableSpan()+" blocks");
 
         for (int i = 0; i < builder.getCraftingTableSpan(); i++) {
             String blockName = blocks[i].trim();
             if (!blockName.equals("0")) {
                 try {
-                    builder.addBlock(Enum.valueOf(enumClass, blockName), new IndexSelection(i, yrow));
+                    builder.addBlock(Enum.valueOf(enumClass, blockName), new IndexSelection(i, lineIndex));
                 } catch (IllegalArgumentException e) {
                     throw new ParsingException("Syntax error at line " + this.currentLine + ": expected block name");
                 }
             }
         }
     }
+
+
 }
