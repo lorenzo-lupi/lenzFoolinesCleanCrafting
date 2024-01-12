@@ -1,5 +1,4 @@
 package lenzInsanityCleanCrafting.Craft;
-
 public record IndexSelection(int x, int y){
 
     public IndexSelection{
@@ -8,16 +7,20 @@ public record IndexSelection(int x, int y){
     }
 
     public int compareTo(IndexSelection that){
+        if(that==null) throw new IllegalArgumentException("that must not be null");
         if(this.x() < that.x() && this.y() < that.y()) return 1;
         if(this.x() > that.x() && this.y() > that.y()) return -1;
         return 0;
     }
 
     public boolean greaterThan(IndexSelection that){
+        if(that==null) throw new IllegalArgumentException("that must not be null");
         return this.x() < that.x() && this.y() < that.y();
     }
 
     public boolean greaterThanOrEqual(IndexSelection that){
+
+        if(that==null) throw new IllegalArgumentException("that must not be null");
         return this.x() <= that.x() && this.y() <= that.y();
     }
 

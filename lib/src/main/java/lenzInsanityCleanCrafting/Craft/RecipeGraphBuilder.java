@@ -4,6 +4,13 @@ package lenzInsanityCleanCrafting.Craft;
 import java.util.*;
 import java.util.function.Consumer;
 
+/**
+ * A RecipeGraphBuilder is used to build a RecipeGraph.
+ * It is used to add building blocks to the crafting table matrix.
+ * The building blocks will be added to the specified index selection.
+ * A RecipeGraphBuilder builds a graph using a square matrix.
+ * @param <T>
+ */
 public class RecipeGraphBuilder<T> {
     private final ArrayList<ArrayList<RecipeGraphNode<T>>> craftingTableMatrix;
     private IndexSelection rootIndex;
@@ -12,8 +19,8 @@ public class RecipeGraphBuilder<T> {
     private int height;
     private int span;
 
-    //region positionOnTheCraftingTableConsumerMap
-    private final Map<PositionOnTheCraftingTableENUM, Consumer<IndexSelection>> positionOnTheCraftingTableConsumerMap =
+    //region nodesLinkingBasedOnPositionConsumersMap
+    private final Map<PositionOnTheCraftingTableENUM, Consumer<IndexSelection>> nodesLinkingBasedOnPositionConsumersMap =
             Map.of(PositionOnTheCraftingTableENUM.LEFT_UP_CORNER, indexSelection -> {
                         setGraphNodeEdgeInGivenDirection(EdgesDirectionsENUM.RIGHT, indexSelection);
                         setGraphNodeEdgeInGivenDirection(EdgesDirectionsENUM.DOWN, indexSelection);
@@ -76,7 +83,7 @@ public class RecipeGraphBuilder<T> {
     //endregion
 
     public static <T> RecipeGraphBuilder<T> getLenzInsanityCraftTable(){
-        return new RecipeGraphBuilder<T>(3, 3);
+        return new RecipeGraphBuilder<>(3, 3);
     }
 
     /**
@@ -126,6 +133,7 @@ public class RecipeGraphBuilder<T> {
      * @param indexSelection the index selection to add the building block to
      */
     public void addBlock(T buildingBlock, IndexSelection indexSelection) {
+        if (buildingBlock == null) throw new NullPointerException("Building block must not be null");
         if (indexSelection.x() >= craftingTableMatrix.size() || indexSelection.y() >= craftingTableMatrix.get(0).size())
             throw new IllegalArgumentException("Index out of bounds");
 
@@ -135,13 +143,12 @@ public class RecipeGraphBuilder<T> {
         if(getCraftingTableMatrixNode(indexSelection) == null) this.size++;
         setCraftingTableMatrixNode(indexSelection, recipeGraphNode);
 
-        positionOnTheCraftingTableConsumerMap.get(PositionOnTheCraftingTableENUM.fromIndex(indexSelection,
+        nodesLinkingBasedOnPositionConsumersMap.get(PositionOnTheCraftingTableENUM.fromIndex(indexSelection,
                 craftingTableMatrix.size(),
                 craftingTableMatrix.get(0).size())).accept(indexSelection);
     }
 
     private void setGraphNodeEdgeInGivenDirection(EdgesDirectionsENUM edgeDirection, IndexSelection newNodeIndex) {
-        
         if (getCraftingTableMatrixNode(edgeDirection.applyIndexChange(newNodeIndex)) != null) {
             
             getCraftingTableMatrixNode(newNodeIndex)
