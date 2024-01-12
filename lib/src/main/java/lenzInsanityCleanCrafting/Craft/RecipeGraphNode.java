@@ -1,7 +1,6 @@
 package lenzInsanityCleanCrafting.Craft;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 public class RecipeGraphNode<T> {

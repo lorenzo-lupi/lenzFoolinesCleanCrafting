@@ -1,9 +1,7 @@
 package lenzInsanityCleanCrafting.Craft;
 
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class RecipeGraphBuilder<T> {
@@ -11,6 +9,8 @@ public class RecipeGraphBuilder<T> {
     private IndexSelection rootIndex;
     private RecipeGraphNode<T> root;
     private int size;
+    private int height;
+    private int span;
 
     //region positionOnTheCraftingTableConsumerMap
     private final Map<PositionOnTheCraftingTableENUM, Consumer<IndexSelection>> positionOnTheCraftingTableConsumerMap =
@@ -91,7 +91,8 @@ public class RecipeGraphBuilder<T> {
             throw new IllegalArgumentException("Height and span must be positive integers");
         this.craftingTableMatrix = new ArrayList<>(span);
         buildMatrix(height, span);
-
+        this.span = span;
+        this.height = height;
         this.root = null;
         this.size = 0;
     }
@@ -176,20 +177,37 @@ public class RecipeGraphBuilder<T> {
             return null;
     }
 
+    public void reset(){
+        this.root = null;
+        this.size = 0;
+        buildMatrix(craftingTableMatrix.size(), craftingTableMatrix.get(0).size());
+    }
+
     //O(n) where n is the number of nodes reachable from the root :(
     private boolean isAllLinked(){
         int counter = 0;
+        Set<RecipeGraphNode<T>> visitedNodes = new HashSet<>();
         LinkedList<RecipeGraphNode<T>> queue = new LinkedList<>();
         queue.add(root);
         while(!queue.isEmpty()){
             RecipeGraphNode<T> node = queue.poll();
+            visitedNodes.add(node);
             counter++;
             for(EdgesDirectionsENUM edgesDirections : EdgesDirectionsENUM.values()){
                 RecipeGraphNode<T> nextNode = node.navigateEdges(edgesDirections);
-                if(nextNode != null) queue.add(nextNode);
+                if(nextNode != null && !visitedNodes.contains(nextNode)) queue.add(nextNode);
             }
         }
         return counter == this.size;
     }
+
+    public int getCraftingTableHeight(){
+        return this.height;
+    }
+
+    public int getCraftingTableSpan(){
+        return this.span;
+    }
+
 
 }
