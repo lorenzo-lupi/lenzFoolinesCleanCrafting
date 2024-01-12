@@ -7,10 +7,10 @@ public enum EdgesDirectionsENUM {
     DOWN(IndexSelection::increasedY),
     LEFT(IndexSelection::decreasedX),
     RIGHT(IndexSelection::increasedX),
-    UP_LEFT(IndexSelection::decreasedBoth),
+    UP_LEFT(IndexSelection::drecreasedXdecreasedY),
     UP_RIGHT(IndexSelection::increasedXDecreasedY),
     DOWN_LEFT(IndexSelection::decreasedXIncreasedY),
-    DOWN_RIGHT(IndexSelection::increasedBoth);
+    DOWN_RIGHT(IndexSelection::increasedXIncreasedY);
 
     private final Function<? super IndexSelection, ? extends IndexSelection> directionOperation;
     EdgesDirectionsENUM(Function<? super IndexSelection, ? extends IndexSelection> operation){

@@ -37,11 +37,11 @@ public record IndexSelection(int x, int y){
         return new IndexSelection(x, y + 1);
     }
 
-    public IndexSelection decreasedBoth(){
+    public IndexSelection drecreasedXdecreasedY(){
         return new IndexSelection(x - 1, y - 1);
     }
 
-    public IndexSelection increasedBoth(){
+    public IndexSelection increasedXIncreasedY(){
         return new IndexSelection(x + 1, y + 1);
     }
 
