@@ -1,5 +1,4 @@
 package lenzInsanityCleanCrafting.CraftingRecipes;
-
 import lenzInsanityCleanCrafting.Craft.RecipeGraph;
 import lenzInsanityCleanCrafting.CraftingParser.Recipe;
 
@@ -14,8 +13,8 @@ public class CraftingRecipes<E extends Enum<E>>{
         this.recipes = (Map<RecipeGraph<E>, Recipe<E>>)recipes;
     }
 
-    public Recipe<E> getRecipe(E block){
-        return recipes.get(block);
+    public Recipe<E> getBlockFromRecipe(RecipeGraph<E> graph){
+        return recipes.get(graph);
     }
 
     public static <T extends Enum<T>> void setRecipe(Class<T> enumClass,
@@ -26,7 +25,7 @@ public class CraftingRecipes<E extends Enum<E>>{
         CraftingRecipes.recipesMap.put(enumClass, craftingRecipes);
     }
 
-    public static <T extends Enum<T>> CraftingRecipes<T> getRecipes(Class<T> enumClass){
-        return (CraftingRecipes<T>)recipesMap.get(enumClass);
+    public static <T extends Enum<T>> Recipe<T> getRecipe(Class<T> enumClass, RecipeGraph<T> graph){
+        return ((CraftingRecipes<T>)recipesMap.get(enumClass)).getBlockFromRecipe(graph);
     }
 }
